@@ -76,7 +76,7 @@ public class SVM {
         //Abandonado
         
         //
-        //n2s.setInputFormat(dataset);
+        n2s.setInputFormat(dataset);
         //
         //Instances n2sApplied;
         //n2sApplied = Filter.useFilter(dataset, n2s);
