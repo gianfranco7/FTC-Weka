@@ -4,9 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
-//import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.LibSVM;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -21,27 +19,35 @@ public class SVMClassifier {
     Dataset dataset;
 
     public SVMClassifier(Dataset dataset, String path) throws Exception {
-        String options[] = {"-S", "0", "-K", "2", "-D", "3", "-G", "0.4", "-R", "0.0", "-N", "0.5", "-M", "40.0", "-C", "10.0", "-E", "0.001", "-P", "0.1"};
-        classifier = new LibSVM();
-        classifier.setOptions(options);
-        this.dataset = dataset;
-        this.modelHeader = dataset.dataset;
-
         System.out.println("_____________________________________________________\n");
-        System.out.println("                  Construyendo...\n");
-        classifier.buildClassifier(modelHeader);
+        System.out.println("                  Cargando modelo...");
 
+        InputStream is = new BufferedInputStream(new FileInputStream(path));
+        ObjectInputStream objectStream = new ObjectInputStream(is);
+
+        classifier = (LibSVM) objectStream.readObject();
+
+        objectStream.close();
+
+        this.dataset = dataset;
+        this.modelHeader = dataset.getDataSet();
+
+        
+        System.out.println("_____________________________________________________\n");
+        System.out.println("                  Evaluacion inicial...");
         Evaluation eval = new Evaluation(modelHeader);
         eval.evaluateModel(classifier, modelHeader);
 
-        System.out.println("Correct:  "+ eval.correct() + " Incorrect: " + eval.incorrect());
-
         System.out.println("_____________________________________________________\n");
-        System.out.println("                  Summary...");
+        System.out.println("                  Resumen...");
         System.out.println(eval.toSummaryString());
          
-        dataset.save("Models/generated_dataset.arff");
+        System.out.println("_____________________________________________________\n");
+        System.out.println("                  Listo para predecir...");
     }
+
+
+
 
     public void classifyBatch(String path) throws Exception{
         System.out.println("_____________________________________________________\n");
@@ -69,6 +75,8 @@ public class SVMClassifier {
             line = reader.readLine();
         }
 
+        reader.close();
+
         Evaluation localEval = new Evaluation(localData);
         localEval.evaluateModel(classifier, localData);
 
@@ -79,23 +87,28 @@ public class SVMClassifier {
         System.out.println(CM[0][1] + " " + CM[1][1]);
     }
 
-    public String classify(String input) throws Exception{
+
+
+
+    public boolean classify(String input) throws Exception{
+        System.out.println("_____________________________________________________\n");
+        System.out.println("                  Realizando predccion...");
         input = input.toLowerCase();
         Instance inst = matchInstance(input);
 
-        modelHeader.add(inst);
-        double result = classifier.classifyInstance(modelHeader.lastInstance());
-        double predict[] = classifier.distributionForInstance(modelHeader.lastInstance());
+        double result = classifier.classifyInstance(inst);
+        double predict[] = classifier.distributionForInstance(inst);
         
-        System.out.println(result + ", " + "Fake: " + predict[0] + " Real: " + predict[1]);
-
-        String res = "fake";
-        if(predict[1] > 0){
-            res = "real";
-        }
-
-        return res;
+        System.out.println("_____________________________________________________\n");
+        System.out.println("                  Resultado...");
+        System.out.println("Resultado: " + modelHeader.classAttribute().value((int) result));
+        System.out.println("Distribucion: " + "Falso: " + predict[0] + " Real: " + predict[1]);
+        
+        return predict[1] > 0;
     }
+
+
+
 
     private Instance matchInstance(String input) throws Exception{
         Instances data = dataset.createDummyDataset(input);
