@@ -94,6 +94,8 @@ public class SVMClassifier {
         System.out.println("_____________________________________________________\n");
         System.out.println("                  Realizando predccion...");
         input = input.toLowerCase();
+        input = input.replace("target", "");
+        input = input.replace("id", "");
         Instance inst = matchInstance(input);
 
         double result = classifier.classifyInstance(inst);
