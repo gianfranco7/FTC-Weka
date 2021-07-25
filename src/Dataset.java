@@ -6,6 +6,7 @@ import weka.core.stemmers.NullStemmer;
 import weka.core.tokenizers.NGramTokenizer;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NominalToString;
+import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.StringToWordVector;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -69,19 +70,32 @@ public class Dataset {
         return s2wv;
     }
 
+    public Remove removeFilter(){
+        Remove removeFilter = new Remove();
+        removeFilter.setAttributeIndices("1");
+        return removeFilter;
+    }
+
     public void applyFilters() throws Exception{
         Filter n2s = createParametrizedNominal2String();
         Filter s2wv = createParametrizedString2WordVector();
+        Filter remove = removeFilter();
         n2s.setInputFormat(dataset);
         dataset = Filter.useFilter(dataset, n2s);
         s2wv.setInputFormat(dataset);
         dataset = Filter.useFilter(dataset, s2wv);
+        remove.setInputFormat(dataset);
+        dataset = Filter.useFilter(dataset, remove);
     }
 
     public void load(String path) throws Exception{
         DataSource source = new DataSource(path);
         dataset = source.getDataSet();
         dataset.setClassIndex(1);
+        for(int i = 0; i < dataset.numAttributes(); i++){
+            
+        dataset.setAttributeWeight(i, 1);
+        }
     }
 
     public void save(String path) throws IOException{
@@ -133,7 +147,11 @@ public class Dataset {
       
       s2wv.setInputFormat(tempDataset);
       tempDataset = Filter.useFilter(tempDataset, s2wv);
+      
+      Remove removeFilter = removeFilter();
+      removeFilter.setInputFormat(tempDataset);
 
+      tempDataset = Filter.useFilter(tempDataset, removeFilter);
       return tempDataset;    
     }
 }
