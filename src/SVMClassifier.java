@@ -21,7 +21,7 @@ public class SVMClassifier {
     Dataset dataset;
 
     public SVMClassifier(Dataset dataset, String path) throws Exception {
-        String options[] = {"-S", "0", "-K", "2", "-D", "3", "-G", "0.0", "-R", "0.0", "-N", "0.5", "-M", "40.0", "-C", "10.0", "-E", "0.001", "-P", "0.1"};
+        String options[] = {"-S", "0", "-K", "2", "-D", "3", "-G", "0.4", "-R", "0.0", "-N", "0.5", "-M", "40.0", "-C", "10.0", "-E", "0.001", "-P", "0.1"};
         classifier = new LibSVM();
         classifier.setOptions(options);
         this.dataset = dataset;
