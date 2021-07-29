@@ -6,7 +6,7 @@
 
 
 ## Autores
-* Luis Carlos Quesada Rodríguez luis
+* Luis Carlos Quesada Rodríguez
 * Gianfranco Bagnarello Hernández 
 * Daniel Ramírez Umaña
 
