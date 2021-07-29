@@ -1,5 +1,15 @@
-# Clasificador de desastres falsos a partir de tweets usando un nucleo de Weka 
+# Clasificador de desastres falsos a partir de tweets usando un núcleo de Weka 
 
-## Esta aplicación realiza clasificación de lenguaje natural para diferenciar tweets que hablan de desastres falsos y verdaderos, la aplicación fue desarrollada en Java con la ayuda de la biblioteca Weka.
+* Esta aplicación realiza clasificación de lenguaje natural para diferenciar tweets que hablan de desastres falsos y verdaderos, fué desarrollada en el lenguaje Java con la ayuda de la biblioteca Weka. 
  
 ![](imgs/ScreenshotFTC.png?raw=true "Screenshot de la app funcionando")
+
+
+## Autores
+* Luis Carlos Quesada Rodríguez luis
+* Gianfranco Bagnarello Hernández 
+* Daniel Ramírez Umaña
+
+
+## Bibliotecas auxiliares
+* https://waikato.github.io/weka-wiki/
